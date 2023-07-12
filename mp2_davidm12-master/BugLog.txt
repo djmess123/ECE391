@@ -1,0 +1,73 @@
+VertLine needs implementing
+- Copied horiz line, swapped x,y coordinates : semi functional, but glitchy
+- swapped back some vars in address calculation, also removed plane incrementing,
+    since all vertical lines are in the same plane : Working vert_line
+- DONE!
+
+Split Screen needs implementing
+- changed CRTC regs to enable splitting at 200-18 : its too thin and mirrors the top of Screen
+- VGA is in 400 line mode, changed to 400-(18*2) : good width, still mirrors
+- attempt at shifting around offsets on different defines : very broken ,reverting
+- changed starting line address to size of status bar : everything is more offset now
+- Shifted where the game screen copies to in video memory, offset by statusbar size :status bar is now black, good i think?
+- Decided not to try to use the same build buffer, making a separate build buffer for status bar
+- separate build buffer works! tested by changing to solid color : still has a 1 pixel black line between the two
+- Fixed line by increasing the virtual screen size to 201
+- DONE!
+
+Text to Graphics
+- Going to use a similar approach as horiz_line_func, wish me luck!
+- Rough draft works ok : text shows up reversed
+- fixed reversed text by making algoirthm big-endian : tests show code crashes if text is longer than 8 chars
+- gdb says something to do with line y=15
+- fixed! i forgot to leave an extra 2 pixels on either side of the text, so it was trying to write past the build buffer
+- changed colors to match level 1
+- DONE!
+
+Put game stats on status bar
+- first draft successfully displays level, fruits, but time is wonky : no leading zeros
+- looked up syntax, now properly leading zeros
+- DONE!
+
+Masking of player
+- Decided to try and implement into draw_block, added extra arguments, changed all calls to match
+- IT WORKED FIRST TRY, WOWWWW
+- wait, when trying to make status bar update when stopped, now character disappears
+- fixed, removed the need redraw, not necessary
+- DONE!
+
+================================================================================================================
+
+
+Bug log MP2.2:
+Transparent text:
+Text comes up in proper location on screen but is black
+Fixed by changing math to swap palette
+text doesnt shift correctly at screen edges
+Changed shift logic, was subtracting instead of adding in some cases
+Text gets stuck when on larger maps
+I was using logical window size instead of maze size, so it was limited to player positions within 200x320, swapped over to maze_dim_x
+works!
+Text pops up when eating fruit:
+works!
+
+Player color shift
+Changes color at start but does not change after that
+Forgot to subtract current time from start time
+Works!
+
+Change maze color
+semi-transparent text color is wonky
+I was using bit logic instead of adding an offset to get to the semi-transparent region of the pallet
+Works!
+
+Setting LEDs
+Printk not showing up
+Wasnt running on correct VM
+Learned i need to run everything on the test machine I have linked to the TUX
+Only low hex character showing on TUX
+Forgot to shift number mask values in ioctl, fixed
+Characters dont clear when unmasked
+Added missingfunctionality
+First draft works! Now to add sync
+

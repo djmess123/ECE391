@@ -1,0 +1,15 @@
+P1 - 4/5
+
+-1 : x/4xw will print 4 groups of 4 bytes, not 2 groups of 2 bytes.
+
+P2 - 8/10
+
+0 : asdasdasdasdasda
+-1 = -0.5 + -0.5 : Args pushed in wrong order (push key, then left/right ptr)
+-1 : Missing caller teardown (pop args off the stack)
+
+P3 - 9.5/10
+
+-0.5 : Initial check should be for (x <= 0)
+
+Total - 21.5/25 

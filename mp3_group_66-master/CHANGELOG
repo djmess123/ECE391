@@ -1,0 +1,282 @@
+BUGLOG
+
+Date: 3/20/22
+Bug: Test crashing the devel
+Who: Keith B
+Expected: Full test cases to pass through each interrupt in the idt table
+Solution: Reserved IDT table spot empty.  Filled in the empty table with a handler.  This allowed for the test to return something valid. 
+
+Date: 3/20/22
+Bug: GDT not loading properly
+Who: Keith B
+Expected: OS to boot up properly
+Solution: Using wrong GDT pointer passed into the GDT register
+
+Date: 3/21/22
+Bug: Paging Code would not compile
+Who: David M
+Expected: Correct compile after make
+Solution: Inline assembly was used initially, by moving the assembly to separate files code successfully compiled.
+
+Date: 3/21/22
+Bug: Assembly code could not find certain paging function
+Who: David M
+Expected: Code to find function within the assembly file without seg fault
+Solution: added .globl to start of assembly code
+
+Date: 3/22/22
+Bug: Paging makes OS stuck in boot loop
+Who: Luca Z
+Expected: For terminal to fully boot after implementing paging
+Solution: allow 4mb paging, allocate space for kernel and video memory, set correct flags
+
+Date: 3/22/22
+Bug: PIC not performing correctly
+Who: Nick D
+Expected: PIC to handle interrupts correctly
+Solution: Ports were wrong values (and flipped).  Changing ports correctly as well as passing correct values into the pic allowed for interrupts to be handled.
+
+Date: 3/22/22
+Bug: Paging assembly wont compile, multiple definition on the same line
+Who: Luca Z
+Expected: Correct compile after make
+Solution: accidentally compiled multiple instances of object file, separated assembly under different name
+
+Date: 3/23/22
+Bug: Keyboard interrupt not being handled  
+Who: Nick D
+Expected: Keyboard function to actually run (print key)
+Solution: Added interrupt to the linker file
+
+Date: 3/23/22
+Bug: Keyboard not printing correctly
+Who: Keith B
+Expected: Keyboard to print more than one character at a time
+Solution: Seg fault after one character because the keyboard port was wrong and was not getting correct information.
+
+Date: 3/23/22
+Bug: Keyboard not printing the correct key for some of the scan codes
+Who: Keith B
+Expected: Keyboard to press correct key
+Solution: Increased size of the array filled with the keys when scancodes were pressed.  Also initilized 0x00 to keys for future use (bugs happened when pressed keys that were not used)
+
+Date: 3/27/22
+Bug: RTC driver not handling interrupt correctly
+Who: Keith B
+Expected: RTC to get data from interrupt correctly
+Solution: Need to call init in kernel
+
+Date: 3/27/22
+Bug: RTC driver not able to tell wait for interrupt
+Who: Keith B
+Expected: RTC to wait until interrupt is handled to run 
+Solution: Set flags to tell computer to wait until it receives an interrupt
+
+Date: 3/27/22
+Bug: RTC not changing frequency
+Who: Keith B
+Expected: RTC to change frequency properly
+Solution: Need to set the rate correctly as well as properly calculate the rate
+
+Date: 3/27/22
+Bug: Page fault in RTC test
+Who: Keith B
+Expected: RTC to change frequency properly
+Solution: Needed to dereference the buffer passed in correctly
+
+----- TODO FILESYSTEM & TERMINAL DRIVER -----------
+Date: 3/27/22
+Bug: Array elements in structs were being cast as pointers, and then prograrm was accessing garbage
+Who: Luca
+Expected: Accesing various structs associated with file systems
+Solution: Changed definition of array elements from pointers to arrays
+
+Date: 3/27/22
+Bug: Could not effectively find start addresses of iNode and DataBlock sections in memory
+Who: Luca
+Expected: The right address
+Solution: To move to next block, added by 1024 memory locations instead of 4096 since we are using 4 byte words, not bytes.
+
+Date: 3/27/22 
+Bug:
+Who:
+Expected:
+Solution:
+
+Date: 3/28/22
+Bug: Very long text file prints an extra smilely face at the end
+Who: Luca Z
+Expected: Pritn just the name
+Solution: extended string buffer
+
+Date: 3/28/22
+Bug: dir_read test would print infinitely
+Who: David M
+Expected: would mimic ls
+Solution: would try to increment file position, but was only incrementing 0 so it never ended
+
+Date: 3/28/22
+Bug: dir_read wouldnt print anything
+Who: David and Luca
+Expected: dir_read would mimic ls
+Solution: extraneous code in RTC was interfereing with dir_read
+
+Date: 4/11/22
+Bug: 
+Who: Keith B
+Expected: 
+Solution:
+
+Date: 4/11/22
+Bug: Pointer errors with functions pertaining to op tables
+Who: Nick D
+Expected: Op tables to be loaded in properly
+Solution: dereference the op tables with in the functions given.  With this it was able to find the correct funtion within each table. 
+
+Date: 4/11/22
+Bug: Page fault error in execut 
+Who: Luca Z
+Expected: No page fault
+Solution: Changing the right stuff to the stack for IRET. 
+
+Date: 4/12/22
+Bug: Could not type after exe shell
+Who: Keith B
+Expected:
+Solution:
+
+Date: 4/17/22
+Bug: After typing random words, max process was being reached with no processes open
+Who: David M
+Expected: No processes to be counted when a process was not executed
+Solution: If fail to find executable, close the PID and do not add to the processes running.  
+
+Date: 4/17/22
+Bug: Page fault after max processes reached
+Who: Nick D
+Expected: No processes ran and no page fault after max processes reached.  
+Solution: the 1 indexed PID was causing problems because the code was expecting a 0 indexed PID number.  
+
+Date: 4/17/22
+Bug: Buffer passing in a random character to functions
+Who: Keith B
+Expected: program to pass in "shell" and not "shell@"
+Solution: Make 1 after the buffer be null to get rid of random character. eg set buf[i] to 0x00.
+
+Date: 4/18/22
+Bug: PCB filled with random data
+Who: Luca Z
+Expected: Tests to pass without having to deal with random misc data.
+Solution: Initilizing PCB in our directory function in filesystem, we only needed it in open.
+
+Date: 4/18/22
+Bug: Get Args not parsing through command and arg
+Who: Keith B & Luca Z
+Expected: Get args to parse through and get correct command
+Solution: Indexing in the system_execute was not getting set correctly for parsing.  
+
+----- MULTI TERMINAL & SCHEDULING -----------
+
+Date: 4/25/22
+Bug: RTC not virtual (single terminal)
+Who: Keith B
+Expected: Pingpong and fish to work properly
+Solution: Flags were not being set in some places thus the code would not know when it was allowed to write to the RTC.  The code was also not waiting properly for RTC to happen, thus not allowing code to change frequency properly.  
+
+Date: 4/28/22
+Bug: Fish Not launching
+Who: Luca Z
+Expected: fish to show up on the screen and run properly
+Solution: Changed the vidmap to change the screen start value.  
+
+Date: 4/29/22
+Bug: Scheduler not context switch properly
+Who: David M
+Expected: Scheduler to context switch correctly
+Solution: Need to save the ebp to go back to where we needed to go in the scheduler.  Scheduler then was able to not fault on switch
+
+Date: 5/1/22
+Bug: Video memory not switching from virtual to physical
+Who: Nick D
+Expected: The video memory to be mapped properly to the physical memory to show on the screen
+Solution: Set flags for the video mem so that program knows when to switch over to the correct remap process
+
+Date: 5/1/22
+Bug: 
+Who: Luca Z
+Expected:
+Solution:
+
+Date: 5/1/22
+Bug: PIT not being interrupted
+Who: Keith B
+Expected: print statement to test PIT printing infinitely due to the pit.
+Solution:  Add pit to the IDT and set the privelage level to 0 for kernel accessing  
+
+Date: 5/1/22
+Bug: 
+Who: Nick D
+Expected:
+Solution:
+
+Date: 5/2/22
+Bug: Current terminal being reset to 0 and not starting a shell on each terminal
+Who: Keith B
+Expected: each terminal to have its own shell
+Solution: changed a local variable to a global so it would update and shift through the terminals to allow scheudling to switch properly.  
+
+Date: 5/2/22
+Bug: Not being able to switch visible terminals correctly.  
+Who: David M
+Expected: visible Terminal to switch without being stopped for some other reason. 
+Solution: Set the parent PCB after we save the ebp and esp.  Doing this made it so we could see that multiple shells were starting on boot on each terminal
+
+Date: 5/2/22
+Bug: Characters printing on the wrong terminals 
+Who: Luca Z
+Expected: Character to print only on the visible terminal
+Solution: Change the Putc function to only print to the visible terminal (set by the global variable that holds which terminal we are in).  
+
+Date: 5/2/22
+Bug: PCB not being ran and halted properly (caused page fault)
+Who: Nick D
+Expected: PCB to stop properly after being ran
+Solution: The ESP and EBP saved in halt was not being stored into the correct process.
+
+Date: 5/2/22
+Bug: Pingpong Stuttering on first terminal (multiple terminals)
+Who: Keith B 
+Expected: Pingpong not to stutter to start off
+Solution: Have a counter that counts to the maximum frequency needed to interrupt
+
+
+Date: 5/2/22
+Bug: Pingpong stutter when ran with fish and pingpong (cont from keith's bug)
+Who: David M
+Expected: Pingpong not to stutter
+Solution: need to store the rates and have a counter set for each interrupt.  Without storing the rates, we are using each counter to store the data for that program.
+
+Date: 5/2/22
+Bug: After switching terminals, could not run commands
+Who: Luca   
+Expected: Same execution as other Terminal
+Solution: Changed add_to_keyboard_buffer to not add if the scancode mapped to a null char
+------------------------
+Bug Log Template (Copy & Paste)
+------------------------
+Date:
+Bug:
+Who:
+Expected:
+Solution:
+
+------------------------
+Function Header Template (Copy & Paste)
+------------------------
+/***
+* Description:
+* INPUT:
+* OUTPUT:
+* SIDE EFFECT:
+*/
+
